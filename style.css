@@ -994,3 +994,26 @@ input, select, textarea { font-family: inherit; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── Feedback & Context Enhancements ────────────────────────── */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px 24px;
+}
+.main-content {
+  max-width: 1440px;
+}
+.feedback-card {
+  border-left: 4px solid var(--primary);
+  display: flex !important;
+  flex-direction: column;
+}
+.feedback-card.status-Resolved { border-left-color: var(--success); }
+.feedback-card.status-Pending { border-left-color: var(--warning); }
+.feedback-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+.fb-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px; }

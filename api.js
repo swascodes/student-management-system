@@ -161,6 +161,10 @@ const MOCK = {
       department: payload.department,
       email:      payload.email.trim(),
       phone:      (payload.phone || '').trim(),
+      bloodGroup: (payload.bloodGroup || '').trim(),
+      guardianName: (payload.guardianName || '').trim(),
+      guardianContact: (payload.guardianContact || '').trim(),
+      photo:      payload.photo || null,
       marks:      Number(payload.marks),
       grade:      _grade(Number(payload.marks)),
       joinDate:   payload.joinDate,
@@ -192,6 +196,10 @@ const MOCK = {
       department: payload.department,
       email:      payload.email.trim(),
       phone:      (payload.phone || '').trim(),
+      bloodGroup: (payload.bloodGroup || '').trim(),
+      guardianName: (payload.guardianName || '').trim(),
+      guardianContact: (payload.guardianContact || '').trim(),
+      photo:      payload.photo || null,
       marks:      Number(payload.marks),
       grade:      _grade(Number(payload.marks)),
       joinDate:   payload.joinDate,
@@ -330,6 +338,41 @@ const ApiService = {
 
   /** Expose ApiError for instanceof checks in pages */
   ApiError,
+
+  /* ── Feedback Methods ─────────────────────────────────────── */
+  listFeedbacks: async function() {
+    await _simulateDelay();
+    return JSON.parse(localStorage.getItem('sms_feedbacks') || '[]');
+  },
+
+  createFeedback: async function(payload) {
+    await _simulateDelay();
+    const list = JSON.parse(localStorage.getItem('sms_feedbacks') || '[]');
+    const id = 'FB-' + Math.floor(1000 + Math.random() * 9000);
+    const fb = { ...payload, id, status: 'Pending', timestamp: Date.now() };
+    list.unshift(fb);
+    localStorage.setItem('sms_feedbacks', JSON.stringify(list));
+    return { success: true, data: fb };
+  },
+
+  updateFeedbackStatus: async function(id, status) {
+    await _simulateDelay();
+    const list = JSON.parse(localStorage.getItem('sms_feedbacks') || '[]');
+    const idx = list.findIndex(f => f.id === id);
+    if (idx !== -1) {
+      list[idx].status = status;
+      localStorage.setItem('sms_feedbacks', JSON.stringify(list));
+    }
+    return { success: true };
+  },
+
+  deleteFeedback: async function(id) {
+    await _simulateDelay();
+    let list = JSON.parse(localStorage.getItem('sms_feedbacks') || '[]');
+    list = list.filter(f => f.id !== id);
+    localStorage.setItem('sms_feedbacks', JSON.stringify(list));
+    return { success: true };
+  }
 };
 
 /* ─────────────────────────────────────────────────────────────
@@ -360,4 +403,13 @@ function seedDemoDataIfEmpty() {
     createdAt: Date.now(), updatedAt: Date.now(),
   }));
   _save(students);
+
+  // Seed feedback
+  if (!localStorage.getItem('sms_feedbacks')) {
+    localStorage.setItem('sms_feedbacks', JSON.stringify([
+      { id: 'FB-1001', studentName: 'Aarav Sharma', subject: 'Lab Computers Issue', category: 'Facilities', message: 'The computers in Lab 3 randomly restart during compilation. Please check the power supply.', status: 'Pending', timestamp: Date.now() - 86400000 },
+      { id: 'FB-1002', studentName: 'Diya Patel', subject: 'More Reference Books', category: 'Library', message: 'Could we get more copies of the recommended biology textbooks? They are always checked out.', status: 'Resolved', timestamp: Date.now() - 345600000 },
+      { id: 'FB-1003', studentName: 'Ananya Kumar', subject: 'Seminar Schedule Clash', category: 'Academic', message: 'The literature seminar clashes with the guest lecture tomorrow. Can it be rescheduled?', status: 'Pending', timestamp: Date.now() - 1200000 },
+    ]));
+  }
 }

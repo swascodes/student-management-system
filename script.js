@@ -134,10 +134,10 @@ function initSidebar() {
 }
 
 function setActiveNav() {
-  const path = window.location.pathname.split('/').pop() || 'index.html';
+  const path = window.location.pathname.split('/').pop() || 'dashboard.html';
   document.querySelectorAll('.nav-link').forEach(link => {
     const href = (link.getAttribute('href') || '').split('/').pop();
-    link.classList.toggle('active', href === path || (path === '' && href === 'index.html'));
+    link.classList.toggle('active', href === path || (path === '' && href === 'dashboard.html'));
   });
 }
 
