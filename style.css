@@ -72,13 +72,21 @@
 
 /* ── Reset & Base ───────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 16px; scroll-behavior: smooth; }
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
+}
 body {
   font-family: 'Inter', system-ui, sans-serif;
   background: var(--bg);
   color: var(--text-primary);
   transition: background .3s ease, color .3s ease;
   overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 a { text-decoration: none; color: inherit; }
 ul, ol { list-style: none; }
@@ -90,6 +98,8 @@ input, select, textarea { font-family: inherit; }
 .app-shell {
   display: flex;
   min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 /* ── Sidebar ────────────────────────────────────────────────── */
@@ -289,6 +299,10 @@ input, select, textarea { font-family: inherit; }
   min-height: calc(100vh - var(--topbar-h));
   padding: 32px 28px;
   transition: margin-left .3s ease;
+  width: calc(100% - var(--sidebar-w));
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* ── Page Header ────────────────────────────────────────────── */
@@ -959,9 +973,17 @@ input, select, textarea { font-family: inherit; }
   }
   .sidebar-overlay { display: block; }
   .topbar { left: 0; }
-  .main-content { margin-left: 0; }
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
   #menu-toggle { display: flex; }
   .stats-grid { grid-template-columns: 1fr 1fr; }
+  /* Collapse 2-col dashboard/add grid on tablet */
+  .dashboard-grid,
+  .page-two-col {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 600px) {
@@ -973,6 +995,7 @@ input, select, textarea { font-family: inherit; }
   #toast-container { right: 12px; left: 12px; }
   .toast { max-width: 100%; }
   .modal { margin: 12px; }
+  .form-grid { grid-template-columns: 1fr !important; }
 }
 
 /* ── Utility ────────────────────────────────────────────────── */
@@ -1001,8 +1024,26 @@ input, select, textarea { font-family: inherit; }
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px 24px;
 }
-.main-content {
-  max-width: 1440px;
+/* Full-width layout — no max-width restriction on main-content */
+
+/* ── Two-Column Page Layouts ─────────────────────────── */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+.page-two-col {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+  width: 100%;
+}
+.page-two-col > *,
+.dashboard-grid > * {
+  min-width: 0;
 }
 .feedback-card {
   border-left: 4px solid var(--primary);
